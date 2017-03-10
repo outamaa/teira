@@ -1,0 +1,72 @@
+<html>
+  <head>
+    <title>Taistelu-urhojen luola: Hurmeen taikatanner</title>
+    <style>
+      body {
+        background-color: black;
+        font-size: small;
+        color: lime;
+      }
+    </style>
+  </head>
+  <body>
+    <img id="kuva"></div>
+    <script type="text/javascript">
+
+      function ajax(method, url, onSuccess, onFail) {
+        var req = new XMLHttpRequest();
+        req.open("HEAD", url, true);
+        req.onreadystatechange = function () {
+          if (req.readyState === XMLHttpRequest.DONE) {
+            if (req.status === 200) {
+              return onSuccess(req);
+            } else {
+              return onFail(req);
+            }
+          }
+        }
+        req.send();
+      }
+
+      function fetchImageUpdateTime(url, prevUpdateTime, continuation) {
+        return ajax("HEAD", url,
+          function(req) {
+            var lastModified = new Date(req.getResponseHeader("Last-Modified")).getTime();
+            if (prevUpdateTime < lastModified) {
+              return continuation(url, lastModified, fetchImageUpdateTime);
+            } else {
+              return setTimeout(function() {
+                return fetchImageUpdateTime(url, lastModified, continuation);
+              }, 10000);
+            }
+          },
+          function(req) {
+            console.log("the fail is strong in this one");
+            return setTimeout(function() {
+              return fetchImageUpdateTime(url, lastModified, continuation);
+            }, 10000);
+          });
+      }
+      function fetchImage(elementId, cacheBuster) {
+        return function(url, prevUpdateTime, continuation) {
+          return ajax("GET", url,
+            function(req) {
+              document.getElementById(elementId).src = url + "?_=" + cacheBuster;
+              return setTimeout(function() {
+                return continuation(url, prevUpdateTime, fetchImage(elementId, cacheBuster + 1));
+              }, 0);
+            },
+            function(req) {
+              return setTimeout(function() {
+                return continuation(url, prevUpdateTime, fetchImage(elementId, cacheBuster));
+              }, 10000);
+          });
+        }
+      }
+
+
+      fetchImageUpdateTime("pojat.jpeg", 0, fetchImage("kuva", 0));
+
+    </script>
+  </body>
+</html>
