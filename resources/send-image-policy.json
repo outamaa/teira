@@ -1,0 +1,24 @@
+{
+ "Version":"2012-10-17",
+ "Statement": [
+   {
+     "Sid": "AllowSenderToSeeBucketListInTheConsole",
+     "Action": ["s3:ListAllMyBuckets", "s3:GetBucketLocation"],
+     "Effect": "Allow",
+     "Resource": ["arn:aws:s3:::*"]
+   },
+   {
+     "Sid": "AllowRootAndHomeListingOfTeiraBucket",
+     "Action": ["s3:ListBucket"],
+     "Effect": "Allow",
+     "Resource": ["arn:aws:s3:::teira"],
+     "Condition":{"StringEquals":{"s3:prefix":["","images/"],"s3:delimiter":["/"]}}
+   },
+   {
+     "Sid": "AllowAllS3ActionsInImagesFolder",
+     "Effect": "Allow",
+     "Action": ["s3:*"],
+     "Resource": ["arn:aws:s3:::teira/images/*"]
+   }
+ ]
+}
