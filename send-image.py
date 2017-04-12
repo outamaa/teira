@@ -1,7 +1,10 @@
+#!/usr/bin/python
 import boto
 from boto.s3.key import Key
 import os
+import picamera
 import sys
+import time
 
 # http://stackabuse.com/example-upload-a-file-to-aws-s3/
 def upload_to_s3(aws_access_key_id, aws_secret_access_key, file, bucket, key, callback=None, md5=None, reduced_redundancy=False, content_type=None):
@@ -48,8 +51,8 @@ def upload_to_s3(aws_access_key_id, aws_secret_access_key, file, bucket, key, ca
         return True
     return False
 
-S3_ACCESS_KEY = os.environ["S3_ACCESS_KEY"]
-S3_SECRET_KEY = os.environ["S3_SECRET_KEY"]
+S3_ACCESS_KEY = os.getenv("S3_ACCESS_KEY", None)
+S3_SECRET_KEY = os.getenv("S3_SECRET_KEY", None)
 
 UPLOAD_FILENAME = sys.argv[1]
 BUCKET_NAME = sys.argv[2]
