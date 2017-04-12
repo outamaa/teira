@@ -57,16 +57,12 @@ S3_SECRET_KEY = os.getenv("S3_SECRET_KEY", None)
 UPLOAD_FILENAME = sys.argv[1]
 BUCKET_NAME = sys.argv[2]
 
-sleep_secs = 60
-
 with picamera.PiCamera() as camera:
     camera.resolution = (1280, 720)
     time.sleep(10)
-    while True:
-        camera.capture(UPLOAD_FILENAME, format='jpeg')
-        f = open(UPLOAD_FILENAME, 'rb')
-        if upload_to_s3(S3_ACCESS_KEY, S3_SECRET_KEY, f, BUCKET_NAME, UPLOAD_FILENAME):
-            print 'Yay!'
-        else:
-            print 'Nej!'
-        time.sleep(sleep_secs)
+    camera.capture(UPLOAD_FILENAME, format='jpeg')
+    f = open(UPLOAD_FILENAME, 'rb')
+    if upload_to_s3(S3_ACCESS_KEY, S3_SECRET_KEY, f, BUCKET_NAME, UPLOAD_FILENAME):
+        print 'Yay!'
+    else:
+        print 'Nej!'
