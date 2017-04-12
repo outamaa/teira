@@ -1,6 +1,7 @@
 #!/usr/bin/python
 import boto
 from boto.s3.key import Key
+from boto.s3.connection import OrdinaryCallingFormat
 import os
 import picamera
 import sys
@@ -32,10 +33,10 @@ def upload_to_s3(aws_access_key_id, aws_secret_access_key, file, bucket, key, ca
         file.seek(0, os.SEEK_END)
         size = file.tell()
 
-    conn = boto.connect_s3(aws_access_key_id, aws_secret_access_key)
     conn = boto.s3.connect_to_region('eu-central-1',
                                      aws_access_key_id=aws_access_key_id,
                                      aws_secret_access_key=aws_secret_access_key,
+                                     calling_format=OrdinaryCallingFormat(),
                                      host='s3.eu-central-1.amazonaws.com')
     bucket = conn.get_bucket(bucket, validate=True)
     k = Key(bucket)
