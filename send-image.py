@@ -59,7 +59,7 @@ UPLOAD_FILENAME = sys.argv[1]
 BUCKET_NAME = sys.argv[2]
 
 with picamera.PiCamera() as camera:
-    camera.resolution = (1280, 720)
+    camera.resolution = (1920, 1080)
     time.sleep(10)
     camera.capture(UPLOAD_FILENAME, format='jpeg')
     f = open(UPLOAD_FILENAME, 'rb')
